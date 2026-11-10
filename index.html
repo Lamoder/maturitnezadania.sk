@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>Školský plánovač</title>
+<style>
+:root{--bg:#f4f6fb;--surface:#fff;--text:#172033;--muted:#718096;--line:#e6eaf1;--accent:#5b6df5;--accent2:#eef0ff;--green:#15966b;--red:#dc5555;--amber:#c78320;--shadow:0 8px 30px rgba(27,39,74,.06)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer}.app{max-width:1250px;margin:auto;padding:26px 22px 60px}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:var(--accent);color:white;display:grid;place-items:center;font-size:22px;font-weight:800}.brand h1{font-size:21px;margin:0}.brand p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.header-actions{display:flex;gap:9px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:white;color:var(--text);border-radius:10px;padding:9px 13px;font-weight:600}.btn.primary{background:var(--accent);border-color:var(--accent);color:white}.btn.danger{color:var(--red)}.btn.small{padding:6px 9px;font-size:13px}
+.hero{background:linear-gradient(115deg,#202b53,#4958c9);color:white;border-radius:20px;padding:26px 28px;margin-bottom:22px;box-shadow:var(--shadow)}.hero h2{font-size:25px;margin:0 0 5px}.hero p{margin:0;color:#dce1ff}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0 24px}.stat{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:var(--shadow)}.stat .num{font-size:27px;font-weight:750}.stat .label{font-size:13px;color:var(--muted)}
+.tabs{display:flex;gap:7px;border-bottom:1px solid var(--line);margin-bottom:20px;overflow:auto}.tab{padding:12px 16px;border:0;background:none;color:var(--muted);font-weight:700;white-space:nowrap;border-bottom:3px solid transparent}.tab.active{color:var(--accent);border-color:var(--accent)}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px;flex-wrap:wrap}.toolbar h2{font-size:20px;margin:0}.tools{display:flex;gap:8px;flex-wrap:wrap}.field{border:1px solid var(--line);background:white;border-radius:10px;padding:10px 12px;color:var(--text);min-width:0}.search{min-width:220px}.layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px}.panel{background:white;border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:var(--shadow)}.panel h3{font-size:15px;margin:0 0 13px}.list{display:grid;gap:10px}.item{border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.item-main{min-width:0}.item h3{margin:0 0 5px;font-size:15px}.item p{margin:0;color:var(--muted);font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}.meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.tag{font-size:11px;padding:3px 8px;border-radius:20px;background:#f0f2f7;color:#5d687b}.tag.green{background:#e7f7f0;color:#147b59}.tag.red{background:#fff0f0;color:#bd4444}.tag.amber{background:#fff5e6;color:#a36a17}.item-actions{display:flex;gap:5px;flex-shrink:0}.iconbtn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 8px;color:#647084}.iconbtn:hover,.btn:hover{filter:brightness(.97)}.empty{text-align:center;padding:42px 15px;color:var(--muted)}.empty strong{display:block;color:var(--text);margin-bottom:5px}
+.category-list{display:grid;gap:8px}.category{display:flex;justify-content:space-between;align-items:center;padding:9px 10px;border-radius:9px;background:#f7f8fc;font-size:13px}.progress{height:8px;background:#edf0f6;border-radius:20px;overflow:hidden;margin:10px 0}.progress span{display:block;height:100%;background:var(--accent);border-radius:20px}.muted{color:var(--muted);font-size:13px}.hidden{display:none!important}
+.modal-backdrop{position:fixed;inset:0;background:#11182788;display:grid;place-items:center;padding:18px;z-index:10}.modal{background:white;width:min(540px,100%);max-height:90vh;overflow:auto;border-radius:17px;padding:22px;box-shadow:0 20px 70px #0003}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.modal-head h2{margin:0;font-size:20px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-group{display:grid;gap:5px}.form-group.full{grid-column:1/-1}.form-group label{font-size:13px;font-weight:650;color:#536078}.form-group input,.form-group textarea,.form-group select{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px;background:white}.form-group textarea{min-height:95px;resize:vertical}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:30px}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.app{padding:17px 13px 40px}header{align-items:flex-start;flex-direction:column}.hero{padding:22px}.hero h2{font-size:21px}.toolbar{align-items:stretch}.tools{width:100%}.search{flex:1;min-width:100%}.form-grid{grid-template-columns:1fr}.form-group.full{grid-column:auto}.item{padding:12px}.item-actions{flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="brand"><div class="logo">Š</div><div><h1>Školský plánovač</h1><p>Všetko dôležité na jednom mieste</p></div></div>
+ <div class="header-actions"><button class="btn" id="exportBtn">↓ Exportovať</button><button class="btn" id="importBtn">↑ Importovať</button><input type="file" id="importFile" accept="application/json" hidden></div>
+</header>
+<section class="hero"><h2>Maj školu pod kontrolou.</h2><p>Organizuj si úlohy, sleduj termíny a pripravuj sa na maturitu bez chaosu.</p></section>
+<section class="stats">
+ <div class="stat"><div class="num" id="taskCount">0</div><div class="label">Všetky úlohy</div></div>
+ <div class="stat"><div class="num" id="pendingCount">0</div><div class="label">Nesplnené úlohy</div></div>
+ <div class="stat"><div class="num" id="questionCount">0</div><div class="label">Maturitné otázky</div></div>
+ <div class="stat"><div class="num" id="doneCount">0</div><div class="label">Splnené úlohy</div></div>
+</section>
+<nav class="tabs">
+ <button class="tab active" data-tab="dashboard">Prehľad</button><button class="tab" data-tab="tasks">Školské úlohy</button><button class="tab" data-tab="questions">Maturitné otázky</button>
+</nav>
+<section id="dashboard">
+ <div class="toolbar"><h2>Prehľad</h2><button class="btn primary" id="quickAdd">＋ Pridať novú položku</button></div>
+ <div class="layout"><div class="panel"><h3>Najbližšie úlohy</h3><div id="upcoming" class="list"></div></div>
+ <aside class="panel"><h3>Príprava na maturitu</h3><div class="muted" id="questionProgressText">Zatiaľ nemáš pridané otázky.</div><div class="progress"><span id="questionProgress" style="width:0%"></span></div><h3 style="margin-top:22px">Predmety</h3><div id="subjectSummary" class="category-list"></div></aside></div>
+</section>
+<section id="tasks" class="hidden">
+ <div class="toolbar"><h2>Školské úlohy</h2><div class="tools"><input class="field search" id="taskSearch" placeholder="Hľadať úlohu…"><select class="field" id="taskFilter"><option value="all">Všetky</option><option value="pending">Nesplnené</option><option value="done">Splnené</option></select><button class="btn primary" id="addTask">＋ Pridať úlohu</button></div></div>
+ <div id="taskList" class="list"></div>
+</section>
+<section id="questions" class="hidden">
+ <div class="toolbar"><h2>Maturitné otázky</h2><div class="tools"><input class="field search" id="questionSearch" placeholder="Hľadať otázku…"><select class="field" id="subjectFilter"><option value="all">Všetky predmety</option></select><button class="btn primary" id="addQuestion">＋ Pridať otázku</button></div></div>
+ <div id="questionList" class="list"></div>
+</section>
+<footer>Školský plánovač · Údaje sa ukladajú v tomto prehliadači.</footer>
+</div>
+<div id="modalRoot"></div>
+<script>
+const KEY='skolskyPlanovac_v1';
+let data=load();
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{tasks:[],questions:[]}}catch(e){return {tasks:[],questions:[]}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function dateText(d){if(!d)return 'Bez termínu';return new Date(d+'T12:00:00').toLocaleDateString('sk-SK',{day:'numeric',month:'short',year:'numeric'})}
+function isOverdue(d,done){return d&&!done&&d<new Date().toISOString().slice(0,10)}
+function openTab(tab){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));['dashboard','tasks','questions'].forEach(id=>document.getElementById(id).classList.toggle('hidden',id!==tab))}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>openTab(b.dataset.tab));
+function itemActions(type,id,done){return `<div class="item-actions">${type==='task'?`<button class="iconbtn" title="${done?'Označiť ako nesplnené':'Označiť ako splnené'}" onclick="toggleTask('${id}')">${done?'↶':'✓'}</button>`:''}<button class="iconbtn" title="Upraviť" onclick="editItem('${type}','${id}')">✎</button><button class="iconbtn" title="Vymazať" onclick="deleteItem('${type}','${id}')">×</button></div>`}
+function taskCard(t){return `<article class="item"><div class="item-main"><h3>${esc(t.title)}</h3><p>${esc(t.description||'Bez poznámky')}</p><div class="meta"><span class="tag">${esc(t.subject||'Bez predmetu')}</span><span class="tag ${t.done?'green':isOverdue(t.due,false)?'red':'amber'}">${t.done?'Splnené':isOverdue(t.due,false)?'Po termíne':'Čaká na splnenie'}</span><span class="tag">Termín: ${dateText(t.due)}</span><span class="tag">${esc(t.priority||'Normálna')} priorita</span></div></div>${itemActions('task',t.id,t.done)}</article>`}
+function questionCard(q){return `<article class="item"><div class="item-main"><h3>${esc(q.title)}</h3><p>${esc(q.notes||'Bez poznámok')}</p><div class="meta"><span class="tag">${esc(q.subject||'Bez predmetu')}</span>${q.number?`<span class="tag">Číslo ${esc(q.number)}</span>`:''}${q.learned?'<span class="tag green">Naučená</span>':'<span class="tag amber">Na naučenie</span>'}</div></div>${itemActions('question',q.id,false)}</article>`}
+function render(){
+ document.getElementById('taskCount').textContent=data.tasks.length;document.getElementById('pendingCount').textContent=data.tasks.filter(t=>!t.done).length;document.getElementById('doneCount').textContent=data.tasks.filter(t=>t.done).length;document.getElementById('questionCount').textContent=data.questions.length;
+ let upcoming=[...data.tasks].filter(t=>!t.done).sort((a,b)=>(a.due||'9999').localeCompare(b.due||'9999')).slice(0,5);
+ document.getElementById('upcoming').innerHTML=upcoming.length?upcoming.map(taskCard).join(''):'<div class="empty"><strong>Žiadne čakajúce úlohy</strong>Pridaj si úlohu a zobrazí sa tu.</div>';
+ document.getElementById('taskList').innerHTML=filteredTasks().map(taskCard).join('')||'<div class="empty"><strong>Nenašli sa žiadne úlohy</strong>Skús zmeniť vyhľadávanie alebo pridaj novú úlohu.</div>';
+ document.getElementById('questionList').innerHTML=filteredQuestions().map(questionCard).join('')||'<div class="empty"><strong>Zatiaľ tu nie sú maturitné otázky</strong>Pridaj si prvú otázku a postupne si vytvor vlastný zoznam.</div>';
+ let subjects=[...new Set(data.questions.map(q=>q.subject).filter(Boolean))];let learned=data.questions.filter(q=>q.learned).length;let pct=data.questions.length?Math.round(learned/data.questions.length*100):0;
+ document.getElementById('questionProgress').style.width=pct+'%';document.getElementById('questionProgressText').textContent=data.questions.length?`${learned} z ${data.questions.length} otázok naučených (${pct} %)`:'Zatiaľ nemáš pridané otázky.';
+ document.getElementById('subjectSummary').innerHTML=subjects.length?subjects.map(s=>`<div class="category"><span>${esc(s)}</span><strong>${data.questions.filter(q=>q.subject===s).length}</strong></div>`).join(''):'<span class="muted">Predmety sa zobrazia po pridaní otázok.</span>';
+ let opts='<option value="all">Všetky predmety</option>'+subjects.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('');let sf=document.getElementById('subjectFilter'),old=sf.value;sf.innerHTML=opts;sf.value=subjects.includes(old)?old:'all';
+}
+function filteredTasks(){let q=document.getElementById('taskSearch').value.toLowerCase(),f=document.getElementById('taskFilter').value;return data.tasks.filter(t=>(f==='all'||(f==='done'?t.done:!t.done))&&[t.title,t.description,t.subject].join(' ').toLowerCase().includes(q)).sort((a,b)=>(a.due||'9999').localeCompare(b.due||'9999'))}
+function filteredQuestions(){let q=document.getElementById('questionSearch').value.toLowerCase(),s=document.getElementById('subjectFilter').value;return data.questions.filter(x=>(s==='all'||x.subject===s)&&[x.title,x.notes,x.subject,x.number].join(' ').toLowerCase().includes(q))}
+['taskSearch','taskFilter','questionSearch','subjectFilter'].forEach(id=>document.getElementById(id).addEventListener('input',render));
+function form(type,item={}){let isTask=type==='task',editing=!!item.id;let fields=isTask?`
+<div class="form-group full"><label>Názov úlohy *</label><input name="title" required maxlength="120" value="${esc(item.title||'')}" placeholder="Napr. Vypracovať pracovný list"></div>
+<div class="form-group"><label>Predmet</label><input name="subject" value="${esc(item.subject||'')}" placeholder="Napr. Informatika"></div>
+<div class="form-group"><label>Termín odovzdania</label><input name="due" type="date" value="${esc(item.due||'')}"></div>
+<div class="form-group"><label>Priorita</label><select name="priority"><option ${item.priority==='Nízka'?'selected':''}>Nízka</option><option ${!item.priority||item.priority==='Normálna'?'selected':''}>Normálna</option><option ${item.priority==='Vysoká'?'selected':''}>Vysoká</option></select></div>
+<div class="form-group full"><label>Popis / poznámka</label><textarea name="description" placeholder="Čo treba urobiť?">${esc(item.description||'')}</textarea></div>`:`
+<div class="form-group full"><label>Názov otázky *</label><input name="title" required maxlength="160" value="${esc(item.title||'')}" placeholder="Napr. Charakteristika počítačových sietí"></div>
+<div class="form-group"><label>Predmet</label><input name="subject" value="${esc(item.subject||'')}" placeholder="Napr. Informatika"></div>
+<div class="form-group"><label>Číslo otázky</label><input name="number" value="${esc(item.number||'')}" placeholder="Napr. 12"></div>
+<div class="form-group full"><label>Výpisky / poznámky / osnova</label><textarea name="notes" placeholder="Sem si môžeš zapísať obsah otázky…">${esc(item.notes||'')}</textarea></div>
+<div class="form-group full"><label><input type="checkbox" name="learned" ${item.learned?'checked':''} style="width:auto"> Označiť ako naučenú</label></div>`;
+document.getElementById('modalRoot').innerHTML=`<div class="modal-backdrop" id="backdrop"><div class="modal"><div class="modal-head"><h2>${editing?'Upraviť':'Pridať'} ${isTask?'úlohu':'maturitnú otázku'}</h2><button class="iconbtn" onclick="closeModal()">×</button></div><form id="itemForm"><div class="form-grid">${fields}</div><div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">Zrušiť</button><button class="btn primary" type="submit">Uložiť</button></div></form></div></div>`;
+document.getElementById('backdrop').onclick=e=>{if(e.target.id==='backdrop')closeModal()};
+document.getElementById('itemForm').onsubmit=e=>{e.preventDefault();let fd=new FormData(e.target),obj={...item,id:item.id||crypto.randomUUID(),title:fd.get('title').trim(),subject:(fd.get('subject')||'').trim()};if(isTask)Object.assign(obj,{due:fd.get('due'),priority:fd.get('priority'),description:fd.get('description'),done:item.done||false});else Object.assign(obj,{number:fd.get('number'),notes:fd.get('notes'),learned:fd.get('id')?item.learned:fd.get('learned')==='on'});if(!isTask)obj.learned=fd.get('learned')==='on';let arr=isTask?data.tasks:data.questions,idx=arr.findIndex(x=>x.id===obj.id);if(idx>=0)arr[idx]=obj;else arr.unshift(obj);closeModal();save()};
+}
+function closeModal(){document.getElementById('modalRoot').innerHTML=''}
+function toggleTask(id){let t=data.tasks.find(x=>x.id===id);if(t){t.done=!t.done;save()}}
+function editItem(type,id){let arr=type==='task'?data.tasks:data.questions;let item=arr.find(x=>x.id===id);if(item)form(type,item)}
+function deleteItem(type,id){if(!confirm('Naozaj chceš túto položku vymazať?'))return;let k=type==='task'?'tasks':'questions';data[k]=data[k].filter(x=>x.id!==id);save()}
+document.getElementById('addTask').onclick=()=>form('task');document.getElementById('addQuestion').onclick=()=>form('question');
+document.getElementById('quickAdd').onclick=()=>{document.getElementById('modalRoot').innerHTML=`<div class="modal-backdrop" id="backdrop"><div class="modal"><div class="modal-head"><h2>Čo chceš pridať?</h2><button class="iconbtn" onclick="closeModal()">×</button></div><div class="tools"><button class="btn primary" onclick="closeModal();form('task')">＋ Školskú úlohu</button><button class="btn primary" onclick="closeModal();form('question')">＋ Maturitnú otázku</button></div></div></div>`};
+document.getElementById('exportBtn').onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='moje-skolske-udaje.json';a.click();URL.revokeObjectURL(a.href)};
+document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
+document.getElementById('importFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!Array.isArray(d.tasks)||!Array.isArray(d.questions))throw Error();if(confirm('Import nahradí aktuálne údaje. Pokračovať?')){data=d;save();alert('Údaje boli importované.')}}catch(err){alert('Súbor nemá správny formát.')}e.target.value=''};
+render();
+</script>
+</body></html>
